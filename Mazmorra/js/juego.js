@@ -1,4 +1,6 @@
 var canvas;
+var canvasWidth = 750;
+var canvasHeight = 500;
 var ctx;
 var FPS = 60;
 
@@ -36,7 +38,7 @@ function dibujaEscenario()
         for(x = 0; x < escenario[0].length; x++)
         {
             var tile = escenario[y][x];
-            ctx.drawImage(tileMap, tile*tileWith,0, 32,32, x*anchoF,y*altoF, anchoF,altoF);
+            ctx.drawImage(tileMap, tile*tileWith,0, tileWith,tileWith, x*anchoF,y*altoF, anchoF,altoF);
         }
     }
 }
@@ -87,7 +89,7 @@ class Antorcha
             this.cambiaFotograma();
         }
 
-        ctx.drawImage(tileMap, this.fotograma*tileWith,2*tileWith, 32,32, this.x*anchoF,this.y*altoF, anchoF,altoF);
+        ctx.drawImage(tileMap, this.fotograma*tileWith,2*tileWith, tileWith,tileWith, this.x*anchoF,this.y*altoF, anchoF,altoF);
     }
 }
 
@@ -107,7 +109,7 @@ class Jugador {
 
     dibujar()
     {
-        ctx.drawImage(tileMap, 1*tileWith,1*tileWith, 32,32, this.x*anchoF,this.y*altoF, anchoF,altoF);
+        ctx.drawImage(tileMap, 1*tileWith,1*tileWith, tileWith,tileWith, this.x*anchoF,this.y*altoF, anchoF,altoF);
     }
 
     arriba()
@@ -201,7 +203,7 @@ class Enemigo {
 
     dibujar()
     {
-        ctx.drawImage(tileMap, 0*tileWith,1*tileWith, 32,32, this.x*anchoF,this.y*altoF, anchoF,altoF);
+        ctx.drawImage(tileMap, 0*tileWith,1*tileWith, tileWith,tileWith, this.x*anchoF,this.y*altoF, anchoF,altoF);
     }
 
     colision(x,y)
@@ -277,7 +279,13 @@ class Enemigo {
 
 function inicializar()
 {
-    canvas = document.getElementById('canvas');
+    canvas = document.createElement("CANVAS");
+    canvas.setAttribute("id", "canvas");
+    canvas.setAttribute("width", String(canvasWidth));
+    canvas.setAttribute("height", String(canvasHeight));
+    canvas.setAttribute("style", "border:1px solid black;");
+    document.body.appendChild(canvas);
+    
     ctx = canvas.getContext('2d');
     
     tileMap = new Image();
@@ -331,8 +339,8 @@ function inicializar()
 
 function borraCanvas()
 {
-    canvas.width = 750;
-    canvas.height = 500;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
 }
 
 function principal()
