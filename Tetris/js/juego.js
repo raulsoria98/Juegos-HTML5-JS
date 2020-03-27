@@ -13,6 +13,8 @@ var margneLateral = 1;
 var anchoF = 40;
 var altoF = 40;
 
+var puntuacion = 0;
+
 // (12x21) pero se verán (10x16)
 var tablero = [
     [1, 0,0,0,0,0,0,0,0,0,0 ,1],
@@ -76,6 +78,8 @@ function resetea()
         }
     }
 
+    puntuacion = 0;
+
     pieza.nueva();
 }
 
@@ -115,7 +119,7 @@ var ficha1 = [
         [0,1,1,0],
         [0,0,0,0]
     ]
-]
+];
 
 var ficha2 = [
     [
@@ -142,7 +146,7 @@ var ficha2 = [
         [0,0,2,0],
         [0,0,2,0]
     ]
-]
+];
 
 var ficha3 = [
     [
@@ -169,7 +173,7 @@ var ficha3 = [
         [0,0,0,3],
         [0,0,0,0]
     ]
-]
+];
 
 var ficha4 = [
     [
@@ -196,7 +200,7 @@ var ficha4 = [
         [0,0,4,0],
         [0,0,0,0]
     ]
-]
+];
 
 var ficha5 = [
     [
@@ -223,7 +227,7 @@ var ficha5 = [
         [0,0,5,0],
         [0,0,0,0]
     ]
-]
+];
 
 var ficha6 = [
     [
@@ -250,7 +254,7 @@ var ficha6 = [
         [0,6,6,0],
         [0,0,0,0]
     ]
-]
+];
 
 var ficha7 = [
     [
@@ -277,7 +281,7 @@ var ficha7 = [
         [0,0,7,0],
         [0,0,0,0]
     ]
-]
+];
 
 // Llamada: ficha[1][3][y][x]; ficha 1 rotacion 3 en cordenada x,y
 var fichas = [ficha1, ficha2, ficha3, ficha4, ficha5, ficha6, ficha7];
@@ -296,7 +300,7 @@ class Pieza
 
     nueva()
     {
-        this.y = 0;
+        this.y = 1;
         this.x = 4;
 
         this.tipo = Math.floor(Math.random() * 7);
@@ -324,7 +328,6 @@ class Pieza
                 if(fichas[this.tipo][this.rotacion][py][px] != 0)
                 {
                     ctx.fillStyle = coloresFichas[this.tipo];
-                    // TODO: -1 o no?
                     ctx.fillRect((this.x + px - 1) * anchoF, (this.y + py - margenSuperior) * altoF, anchoF, altoF);
                 }
             }
@@ -366,8 +369,8 @@ class Pieza
                     resetea();
                 else
                 {
+                    puntuacion++;
                     limpia();
-
                     this.nueva();
                 }
             }
@@ -406,6 +409,13 @@ class Pieza
     }
 }
 
+function escribePuntuacion()
+{
+    ctx.font = '25px impact';
+    ctx.fillStyle = '#555555';
+    ctx.fillText('Puntuacion: ' + puntuacion, 10,40);
+}
+
 function limpia()
 {
     var filaCompleta;
@@ -422,10 +432,8 @@ function limpia()
 
         if(filaCompleta)
         {
-            for(var px = 1; px < anchoTablero - 1; px++)
-            {
-                tablero[py][px] = 0;
-            }
+            tablero.splice(py,1);
+            tablero.unshift([1, 0,0,0,0,0,0,0,0,0,0 ,1]);
         }
     }
 }
@@ -434,7 +442,7 @@ function pierde()
 {
     for(var px = 1; px < anchoTablero-1; px++)
     {
-        if(tablero[3][px] != 0)
+        if(tablero[margenSuperior][px] != 0)
             return true;
     }
 
@@ -443,9 +451,11 @@ function pierde()
 
 function dibujarTablero()
 {
-    for(var y = margenSuperior; y < altoTablero; y++)
+    escribePuntuacion();
+
+    for(var y = margenSuperior; y < altoTablero - 1; y++)
     {
-        for(var x = 0; x < anchoTablero; x++)
+        for(var x = 1; x < anchoTablero - 1; x++)
         {
             if(tablero[y][x] != 0)
             {
@@ -510,9 +520,9 @@ function principal()
 {
     borraCanvas();
 
-    dibujarTablero();
-
     pieza.caer();
+    
+    dibujarTablero();
 
     pieza.dibujar();
 }
