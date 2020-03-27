@@ -281,9 +281,9 @@ function inicializar()
 {
     canvas = document.createElement("CANVAS");
     canvas.setAttribute("id", "canvas");
-    canvas.setAttribute("width", String(canvasWidth));
-    canvas.setAttribute("height", String(canvasHeight));
-    canvas.setAttribute("style", "border:1px solid black;");
+    canvas.style.width = canvasWidth;
+    canvas.style.height = canvasHeight;
+    canvas.style.border = "3px solid black"
     document.body.appendChild(canvas);
     
     ctx = canvas.getContext('2d');
