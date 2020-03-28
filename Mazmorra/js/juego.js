@@ -13,32 +13,107 @@ var puerta = 1;
 var tierra = 2;
 var llave = 3;
 
+var camara;
 var protagonista;
 var tileMap;
 var enemigos = [];
 var antorchas = [];
 
+var anchoEscenario = 30;
+var altoEscenario = 20;
+var anchoVisible = 15;
+var altoVisible = 10;
+
 var escenario = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,2,2,0,0,0,2,2,2,2,0,0,2,2,0],
-    [0,0,2,2,2,2,2,0,0,2,0,0,2,0,0],
-    [0,0,2,0,0,0,2,2,0,2,2,2,2,0,0],
-    [0,0,2,2,2,0,0,2,0,0,0,2,0,0,0],
-    [0,2,2,0,0,0,0,2,0,0,0,2,0,0,0],
-    [0,0,2,0,0,0,2,2,2,0,0,2,2,2,0],
-    [0,2,2,2,0,0,2,0,0,0,3,0,0,2,0],
-    [0,2,2,2,0,0,1,0,0,2,2,2,2,2,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,2,0,0,0,2,2,2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0],
+    [0,0,2,2,2,2,2,2,0,2,0,0,2,2,0,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0],
+    [0,0,2,0,0,2,2,2,0,2,2,2,2,2,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0],
+    [0,0,2,2,2,0,2,2,0,0,2,2,2,0,0,0,2,2,2,2,2,0,2,0,0,0,0,0,0,0],
+    [0,2,2,0,0,0,0,2,0,0,0,2,0,0,0,0,2,0,0,2,0,0,2,0,0,0,0,0,0,0],
+    [0,0,2,0,0,0,2,2,2,0,0,2,2,2,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,0],
+    [0,2,2,2,0,0,2,0,0,2,2,2,2,2,2,2,2,0,0,2,2,0,2,0,0,0,0,0,0,0],
+    [0,2,2,3,0,0,2,0,0,1,2,2,2,2,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0],
+    [0,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0],
+    [0,2,2,2,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0],
+    [0,2,0,2,2,2,0,0,0,0,0,2,2,2,2,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0],
+    [0,2,0,2,2,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0],
+    [0,2,0,0,0,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0],
+    [0,2,0,0,0,2,0,0,0,0,0,2,0,0,2,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0],
+    [0,2,2,2,0,2,0,0,0,0,0,2,0,0,2,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0],
+    [0,2,0,2,0,0,0,0,0,0,0,2,0,0,2,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0],
+    [0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,2,2,2,2,0,0,2,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ];
 
-function dibujaEscenario()
+class Camara
 {
-    for(y = 0; y < escenario.length; y++)
+    constructor(x,y,ancho,alto,posX,posY)
     {
-        for(x = 0; x < escenario[0].length; x++)
+        this.x = x;
+        this.y = y;
+        this.ancho = ancho;
+        this.alto = alto;
+        this.posX = posX;
+        this.posY = posY;
+    }
+
+    dibujar()
+    {
+        // Escenario
+        for(var y = this.y; y < this.alto + this.y; y++)
         {
-            var tile = escenario[y][x];
-            ctx.drawImage(tileMap, tile*tileWith,0, tileWith,tileWith, x*anchoF,y*altoF, anchoF,altoF);
+            for(var x = this.x; x < this.ancho + this.x; x++)
+            {
+                var tile = escenario[y][x];
+                ctx.drawImage(tileMap, tile*tileWith,0, tileWith,tileWith, (x - this.x + this.posX)*anchoF,(y - this.y + this.posY)*altoF, anchoF,altoF);
+            }
+        }
+
+        // Protagonista
+        if((protagonista.x >= this.x) && (protagonista.x < this.x + this.ancho) && (protagonista.y >= this.y) && (protagonista.y < this.y + this.alto))
+            ctx.drawImage(tileMap, 1*tileWith,1*tileWith, tileWith,tileWith, (protagonista.x - this.x + this.posX)*anchoF,(protagonista.y-this.y+this.posY)*altoF, anchoF,altoF);
+
+        // Enemigos
+        enemigos.forEach(enemigo => {
+            if((enemigo.x >= this.x) && (enemigo.x < this.x + this.ancho) && (enemigo.y >= this.y) && (enemigo.y < this.y + this.alto))
+                ctx.drawImage(tileMap, 0*tileWith,1*tileWith, tileWith,tileWith, (enemigo.x - this.x + this.posX)*anchoF,(enemigo.y-this.y+this.posY)*altoF, anchoF,altoF);
+        });
+
+        // Antorchas
+        antorchas.forEach(antorcha => {
+            if((antorcha.x >= this.x) && (antorcha.x < this.x + this.ancho) && (antorcha.y >= this.y) && (antorcha.y < this.y + this.alto))
+                ctx.drawImage(tileMap, antorcha.fotograma*tileWith,2*tileWith, tileWith,tileWith, (antorcha.x - this.x + this.posX)*anchoF,(antorcha.y-this.y+this.posY)*altoF, anchoF,altoF);
+        });
+    }
+
+    arriba()
+    {
+        if(this.y > 0)
+        {
+            this.y--;
+        }
+    }
+    abajo()
+    {
+        if(this.y < altoEscenario - this.alto)
+        {
+            this.y++;
+        }
+    }
+    izquierda()
+    {
+        if(this.x > 0)
+        {
+            this.x--;
+        }
+    }
+    derecha()
+    {
+        if(this.x < anchoEscenario - this.ancho)
+        {
+            this.x++;
         }
     }
 }
@@ -79,7 +154,7 @@ class Antorcha
             this.fotograma = 0;
     }
 
-    dibujar()
+    actualizar()
     {
         if(this.contador < this.retraso)
             this.contador++;
@@ -88,8 +163,6 @@ class Antorcha
             this.contador = 0;
             this.cambiaFotograma();
         }
-
-        ctx.drawImage(tileMap, this.fotograma*tileWith,2*tileWith, tileWith,tileWith, this.x*anchoF,this.y*altoF, anchoF,altoF);
     }
 }
 
@@ -291,6 +364,8 @@ function inicializar()
     tileMap = new Image();
     tileMap.src = "img/tilemap.png"
 
+    camara = new Camara(0,0, anchoVisible,altoVisible, 0,0);
+
     protagonista = new Jugador();
 
     enemigos.push(new Enemigo(1,8));
@@ -310,19 +385,23 @@ function inicializar()
     {
         switch (tecla.key) {
             case 'ArrowDown':
-                protagonista.abajo();
+                // protagonista.abajo();
+                camara.abajo();
             break;
     
             case 'ArrowUp':
-                protagonista.arriba();
+                // protagonista.arriba();
+                camara.arriba();
             break;
     
             case 'ArrowLeft':
-                protagonista.izquierda();
+                // protagonista.izquierda();
+                camara.izquierda();
             break;
     
             case 'ArrowRight':
-                protagonista.derecha();
+                // protagonista.derecha();
+                camara.derecha();
             break;
 
             case 'r':
@@ -347,16 +426,17 @@ function principal()
 {
     borraCanvas();
 
-    dibujaEscenario();
+    // dibujaEscenario();
+    camara.dibujar();
 
-    protagonista.dibujar();
+    // protagonista.dibujar();
 
     enemigos.forEach(enemigo => {
         enemigo.intentarMover();
-        enemigo.dibujar();
+        // enemigo.dibujar();
     });
 
     antorchas.forEach(antorcha => {
-        antorcha.dibujar();
+        antorcha.actualizar();
     });
 }
