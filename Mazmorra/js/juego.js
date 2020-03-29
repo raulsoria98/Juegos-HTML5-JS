@@ -13,7 +13,6 @@ var puerta = 1;
 var tierra = 2;
 var llave = 3;
 
-var camara;
 var protagonista;
 var tileMap;
 var enemigos = [];
@@ -24,28 +23,64 @@ var altoEscenario = 20;
 var anchoVisible = 15;
 var altoVisible = 10;
 
+var camara;
+var camara1;
+var camara2;
+var camara3;
+var camara4;
+
 var escenario = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,2,2,0,0,0,2,2,2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0],
-    [0,0,2,2,2,2,2,2,0,2,0,0,2,2,0,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0],
-    [0,0,2,0,0,2,2,2,0,2,2,2,2,2,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0],
-    [0,0,2,2,2,0,2,2,0,0,2,2,2,0,0,0,2,2,2,2,2,0,2,0,0,0,0,0,0,0],
-    [0,2,2,0,0,0,0,2,0,0,0,2,0,0,0,0,2,0,0,2,0,0,2,0,0,0,0,0,0,0],
-    [0,0,2,0,0,0,2,2,2,0,0,2,2,2,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,0],
-    [0,2,2,2,0,0,2,0,0,2,2,2,2,2,2,2,2,0,0,2,2,0,2,0,0,0,0,0,0,0],
-    [0,2,2,3,0,0,2,0,0,1,2,2,2,2,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0],
-    [0,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0],
-    [0,2,2,2,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0],
-    [0,2,0,2,2,2,0,0,0,0,0,2,2,2,2,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0],
-    [0,2,0,2,2,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0],
-    [0,2,0,0,0,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0],
-    [0,2,0,0,0,2,0,0,0,0,0,2,0,0,2,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0],
-    [0,2,2,2,0,2,0,0,0,0,0,2,0,0,2,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0],
-    [0,2,0,2,0,0,0,0,0,0,0,2,0,0,2,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0],
-    [0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,2,2,2,2,0,0,2,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,2,0,0,0,2,2,2,2,0,0,2,2,2, 2,2,2,2,2,2,2,2,2,2,2,0,0,0,0],
+    [0,0,2,2,2,2,2,2,0,2,0,0,2,2,0, 0,0,2,0,0,2,0,0,0,0,2,0,2,2,0],
+    [0,0,2,0,0,2,2,2,0,2,2,2,2,2,0, 0,0,0,0,0,2,2,2,0,0,2,2,2,2,0],
+    [0,0,2,2,2,0,2,2,0,0,2,2,2,0,0, 0,2,2,2,2,2,0,2,0,0,0,2,2,0,0],
+    [0,2,2,0,0,0,0,2,0,0,0,2,0,0,0, 0,2,0,0,2,0,0,2,0,0,0,0,2,2,0],
+    [0,0,2,0,0,0,2,2,2,0,0,2,2,2,0, 0,2,0,0,0,0,0,2,0,0,0,2,2,0,0],
+    [0,2,2,2,0,0,2,0,0,2,2,2,2,2,2, 2,2,0,0,2,2,0,2,0,0,0,2,0,0,0],
+    [0,2,2,2,0,0,2,0,0,2,2,2,2,2,0, 0,0,0,2,2,2,2,2,0,0,0,2,2,0,0],
+    [0,2,2,2,0,0,0,0,0,0,0,2,0,0,0, 0,0,0,0,0,0,2,0,0,0,0,2,2,0,0],
+
+    [0,2,2,2,0,0,0,0,0,0,0,2,0,0,0, 0,0,0,0,0,0,2,0,0,0,0,2,2,0,0],
+    [0,2,0,2,2,2,0,0,0,0,0,2,2,2,0, 0,0,0,0,0,2,2,2,0,2,2,2,2,2,0],
+    [0,2,0,2,2,2,0,0,0,0,0,2,0,0,0, 0,0,0,0,0,2,2,2,0,0,0,0,2,2,0],
+    [0,2,0,0,0,2,2,2,2,2,2,2,0,2,0, 0,0,0,0,0,0,2,0,0,0,0,0,2,0,0],
+    [0,2,0,0,0,2,0,0,0,0,0,2,0,2,2, 2,0,0,2,2,2,2,0,0,0,2,2,2,0,0],
+    [0,2,2,2,0,2,0,0,2,2,0,2,0,0,2, 2,0,0,2,2,2,2,0,0,0,2,2,0,0,0],
+    [0,2,0,2,0,0,2,0,2,2,0,2,0,0,2, 2,0,0,2,0,0,2,0,0,2,2,2,0,0,0],
+    [0,0,0,2,0,0,2,0,2,2,2,2,0,0,2, 2,2,2,2,0,0,2,0,2,2,2,2,2,2,0],
+    [0,0,0,2,2,2,2,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,2,2,2,2,2,2,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ];
+
+function colocarObjetos(objeto)
+{
+    colocado = false;
+
+    while(!colocado)
+    {
+        fila = random(1,altoEscenario-2);
+        columna = random(1,anchoEscenario-2);
+        console.log('random: ' + fila + ', ' + columna);
+        
+        for(var y = fila; y < altoEscenario-1; y++)
+        {
+            for(var x = columna; x < anchoEscenario-1; x++)
+            {
+                if(escenario[y][x] == tierra)
+                {
+                    console.log(objeto + ' en pos (' + y + ', ' + x + ')');
+                    escenario[y][x] = objeto;
+                    colocado = true;
+                    break;
+                }
+            }
+
+            if(colocado)
+                break;
+        }
+    }
+}
 
 class Camara
 {
@@ -120,8 +155,22 @@ class Camara
 
 function reiniciar()
 {
+    for(var y = 1; y < altoEscenario-1; y++)
+    {
+        for(var x = 1; x < anchoEscenario-1; x++)
+        {
+            if(escenario[y][x] == puerta || escenario[y][x] == llave)
+            {
+                escenario[y][x] = tierra;
+            }
+        }
+    }
+
+    camara = camara1;
+
     protagonista.setPosicion(1,1);
-    protagonista.llave = false;
+    protagonista.llave1 = false;
+    protagonista.llave2 = false;
 
     enemigos[0].setPosicion(1,8);
     enemigos[1].setPosicion(13,1);
@@ -130,8 +179,9 @@ function reiniciar()
         enemigo.contador = 0;
     });
 
-    escenario[8][6] = puerta;
-    escenario[7][10] = llave;
+    colocarObjetos(puerta);
+    colocarObjetos(llave);
+    colocarObjetos(llave);
 }
 
 class Antorcha
@@ -171,7 +221,8 @@ class Jugador {
         this.x = 1;
         this.y = 1;
         this.color = '#820C01';
-        this.llave = false;
+        this.llave1 = false;
+        this.llave2 = false;
     }
 
     setPosicion(x,y)
@@ -190,6 +241,13 @@ class Jugador {
         if(!this.colision(this.x,this.y-1))
         {
             this.y--;
+            if(this.y < altoEscenario/2)
+            {
+                if(camara == camara3)
+                    camara = camara1;
+                else if(camara == camara4)
+                    camara = camara2;
+            }
             protagonista.interactuar();
         }
     }
@@ -198,6 +256,13 @@ class Jugador {
         if(!this.colision(this.x,this.y+1))
         {
             this.y++;
+            if(this.y >= altoEscenario/2)
+            {
+                if(camara == camara1)
+                    camara = camara3;
+                else if(camara == camara2)
+                    camara = camara4;
+            }
             protagonista.interactuar();
         }
     }
@@ -206,6 +271,13 @@ class Jugador {
         if(!this.colision(this.x-1,this.y))
         {
             this.x--;
+            if(this.x < anchoEscenario/2)
+            {
+                if(camara == camara2)
+                    camara = camara1;
+                else if(camara == camara4)
+                    camara = camara3;
+            }
             protagonista.interactuar();
         }
     }
@@ -214,6 +286,13 @@ class Jugador {
         if(!this.colision(this.x+1,this.y))
         {
             this.x++;
+            if(this.x >= anchoEscenario/2)
+            {
+                if(camara == camara1)
+                    camara = camara2;
+                else if(camara == camara3)
+                    camara = camara4;
+            }
             protagonista.interactuar();
         }
     }
@@ -229,7 +308,10 @@ class Jugador {
     colisionEnemigo(x,y)
     {
         if(this.x == x && this.y == y)
+        {
+            alert('Un enemigo te ha matado :(');
             reiniciar();
+        }
     }
 
     interactuar()
@@ -239,13 +321,29 @@ class Jugador {
         if(objeto == llave)
         {
             escenario[this.y][this.x] = tierra;
-            this.llave = true;
-            alert("Has encontrado una llave!!");
+
+            if(this.llave1)
+            {
+                alert("Has encontrado otra llave!!!!! Ya tienes dos!!");
+                this.llave2 = true;
+            }
+            else
+            {
+                alert("Has encontrado una llave!!");
+                this.llave1 = true;
+            }
         }
         else if(objeto == puerta)
         {
-            if(this.llave)
+            if(this.llave2)
+            {
                 alert("HAS ESCAPADO DEL LABERINTO!!!");
+                reiniciar();
+            }
+            else if(this.llave1)
+            {
+                alert("Tienes una llave... pero la cerradura es para dos llaves!!!");
+            }
             else
                 alert("Puerta cerrada");
         }
@@ -364,7 +462,11 @@ function inicializar()
     tileMap = new Image();
     tileMap.src = "img/tilemap.png"
 
-    camara = new Camara(0,0, anchoVisible,altoVisible, 0,0);
+    camara1 = new Camara(0,0, anchoVisible,altoVisible, 0,0);
+    camara2 = new Camara(anchoEscenario/2,0, anchoVisible,altoVisible, 0,0);
+    camara3 = new Camara(0,altoEscenario/2, anchoVisible,altoVisible, 0,0);
+    camara4 = new Camara(anchoEscenario/2,altoEscenario/2, anchoVisible,altoVisible, 0,0);
+    camara = camara1;
 
     protagonista = new Jugador();
 
@@ -381,27 +483,31 @@ function inicializar()
     antorchas.push(new Antorcha(12,5));
     antorchas.push(new Antorcha(8,5));
 
+    colocarObjetos(puerta);
+    colocarObjetos(llave);
+    colocarObjetos(llave);
+
     document.addEventListener('keydown',function(tecla)
     {
         switch (tecla.key) {
             case 'ArrowDown':
-                // protagonista.abajo();
-                camara.abajo();
+                protagonista.abajo();
+                // camara.abajo();
             break;
     
             case 'ArrowUp':
-                // protagonista.arriba();
-                camara.arriba();
+                protagonista.arriba();
+                // camara.arriba();
             break;
     
             case 'ArrowLeft':
-                // protagonista.izquierda();
-                camara.izquierda();
+                protagonista.izquierda();
+                // camara.izquierda();
             break;
     
             case 'ArrowRight':
-                // protagonista.derecha();
-                camara.derecha();
+                protagonista.derecha();
+                // camara.derecha();
             break;
 
             case 'r':
